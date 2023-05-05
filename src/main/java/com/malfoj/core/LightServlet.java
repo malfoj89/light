@@ -10,7 +10,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 
-class LightServlet extends HttpServlet {
+public class LightServlet extends HttpServlet {
 
     private final static LightRouter router = LightRouter.get();
     private final static Logger LOGGER = LoggerFactory.getLogger(LightServlet.class);
