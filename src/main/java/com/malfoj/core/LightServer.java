@@ -9,16 +9,19 @@ import org.slf4j.LoggerFactory;
 public class LightServer {
 
     public void run() throws Exception {
+        startServer();
+        fanfare();
+    }
+
+    private static void startServer() throws Exception {
         Server server = new Server();
         ServerConnector serverConnector = new ServerConnector(server);
         serverConnector.setPort(8080);
         server.setConnectors(new Connector[]{serverConnector});
         ServletHandler servletHandler = new ServletHandler();
         servletHandler.addServletWithMapping(LightServlet.class, "/");
-
         server.setHandler(servletHandler);
         server.start();
-        fanfare();
     }
 
     private static void fanfare() {

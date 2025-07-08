@@ -1,34 +1,19 @@
 package com.malfoj.core;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.malfoj.core.controller.Controller;
 
-public class LightRouter {
-    private static LightRouter instance = null;
+import java.util.HashMap;
+import java.util.Map;
 
-    private LightRouter() {
-        // Private constructor to prevent external instantiation
-    }
-
-    public static LightRouter get() {
-        if (instance == null) {
-            synchronized (LightRouter.class) {
-                if (instance == null) {
-                    instance = new LightRouter();
-                    instance.addController(new NotFoundController());
-                }
-            }
-        }
-        return instance;
-    }
-
-    private final Set<Controller> controllerList = new HashSet<>();
+public enum LightRouter {
+    INSTANCE;
+    private final Map<String, Controller> controllerList = new HashMap<>();
 
     public void addController(Controller controller){
-        controllerList.add(controller);
+        controllerList.put(controller.getPath(), controller);
     }
 
-    public Set<Controller> getControllerList(){
-        return new HashSet<>(controllerList);
+    public Controller getController(String path){
+        return controllerList.get(path);
     }
 }

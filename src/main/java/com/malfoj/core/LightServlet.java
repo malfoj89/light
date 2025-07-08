@@ -12,7 +12,7 @@ import java.io.IOException;
 
 public class LightServlet extends HttpServlet {
 
-    private final static LightRouter router = LightRouter.get();
+    private final static LightRouter router = LightRouter.INSTANCE;
     private final static Logger LOGGER = LoggerFactory.getLogger(LightServlet.class);
     private final static Gson gson = new LightGson().get();
 
@@ -34,11 +34,10 @@ public class LightServlet extends HttpServlet {
 
     private void handleRequest(HttpServletRequest request, HttpServletResponse response) throws IOException {
         try {
-            var controller = router.getControllerList().stream().filter(it -> it.getPath().equals(request.getRequestURI()) && it.getMethod().getValue().equals(request.getMethod())).findFirst()
-                    .orElseThrow(() -> new RuntimeException("Not found controller")).run();
-            response.setStatus(controller.getStatusCode());
-            response.setContentType(controller.getMediaType());
-            var controllerResponse = controller.getResponse();
+            var process = router.getController(request.getRequestURI()).run();
+            response.setStatus(process.getStatusCode());
+            response.setContentType(process.getMediaType());
+            var controllerResponse = process.getResponse();
             if (controllerResponse != null) {
                 response.getWriter().write(gson.toJson(controllerResponse));
             }
